@@ -30,6 +30,12 @@ public class TransferFacade {
 
     public TransferResponse transferWithLock(String requestId, TransferRequest transferRequest) {
         Double exchangeRate = transferService.validateTransfer(requestId, transferRequest);
-        return transferService.transferWithLock(requestId, transferRequest, exchangeRate);
+        TransferResponse transferResponse = null;
+        try {
+            transferResponse = transferService.transferWithLock(requestId, transferRequest, exchangeRate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return transferResponse;
     }
 }

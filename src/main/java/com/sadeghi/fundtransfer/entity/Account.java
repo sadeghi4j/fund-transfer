@@ -26,6 +26,7 @@ public class Account extends BaseEntity<Long> {
     BigDecimal balance;
 
     @Version
-    Integer version;
+//    @Column(columnDefinition = "default 1")
+    int version;
 
 }

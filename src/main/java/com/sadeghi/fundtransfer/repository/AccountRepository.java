@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Lock(LockModeType.OPTIMISTIC)
+    @Query("select acc from Account acc where acc.id = ?1")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "5000")})
     Account findAndLock(Long id);
 

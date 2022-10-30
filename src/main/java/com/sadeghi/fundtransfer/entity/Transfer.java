@@ -2,9 +2,11 @@ package com.sadeghi.fundtransfer.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * Description of file goes here
@@ -24,13 +26,16 @@ import java.math.BigDecimal;
 public class Transfer extends BaseEntity<Long> {
 
     Long fromAccountId;
-//    String fromCurrency;
+    //    String fromCurrency;
     BigDecimal fromAmount;
 
     Long toAccountId;
-//    String toCurrency;
+    //    String toCurrency;
     BigDecimal toAmount;
 
     String requestId;
+
+    @CreationTimestamp
+    LocalDateTime creationTime;
 
 }

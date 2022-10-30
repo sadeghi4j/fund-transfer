@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -64,9 +65,15 @@ public class TransferService {
         accountService.save(fromAccount);
         accountService.save(toAccount);
 
-
-        Transfer transfer = new Transfer(request.getFromAccountId(), request.getAmount(),
-                request.getToAccountId(), toAmount, requestId);
+        Transfer transfer = Transfer.builder()
+                .fromAccountId(request.getFromAccountId())
+                .fromAmount(request.getAmount())
+                .toAccountId(request.getToAccountId())
+                .toAmount(toAmount)
+                .requestId(requestId)
+                .build();
+        /*Transfer transfer = new Transfer(request.getFromAccountId(), request.getAmount(),
+                request.getToAccountId(), toAmount, requestId);*/
         transferRepository.save(transfer);
 
         return TransferResponse.builder()
@@ -78,25 +85,39 @@ public class TransferService {
     }
 
     @Transactional
-    public TransferResponse transfer(String requestId, TransferRequest transferRequest, Double exchangeRate) {
-        BigDecimal toAmount = transferRequest.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
+    public TransferResponse transfer(String requestId, TransferRequest request, Double exchangeRate) {
+        BigDecimal toAmount = request.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
 
-        accountService.withdraw(transferRequest.getFromAccountId(), transferRequest.getAmount());
-        accountService.deposit(transferRequest.getToAccountId(), toAmount);
+        accountService.withdraw(request.getFromAccountId(), request.getAmount());
+        accountService.deposit(request.getToAccountId(), toAmount);
 
-        Transfer transfer = new Transfer(transferRequest.getFromAccountId(), transferRequest.getAmount(), transferRequest.getToAccountId(), toAmount, requestId);
-        transferRepository.save(transfer);
+        createAndSaveTransfer(requestId, request, toAmount);
 
         return TransferResponse.builder()
-                .fromAccountId(transferRequest.getFromAccountId())
-                .toAccountId(transferRequest.getToAccountId())
-                .fromAmount(transferRequest.getAmount())
+                .fromAccountId(request.getFromAccountId())
+                .toAccountId(request.getToAccountId())
+                .fromAmount(request.getAmount())
                 .toAmount(toAmount)
                 .build();
     }
 
+    private void createAndSaveTransfer(String requestId, TransferRequest request, BigDecimal toAmount) {
+        Transfer transfer = Transfer.builder()
+                .fromAccountId(request.getFromAccountId())
+                .fromAmount(request.getAmount())
+                .toAccountId(request.getToAccountId())
+                .toAmount(toAmount)
+                .requestId(requestId)
+                .build();
+        transferRepository.save(transfer);
+    }
+
     public boolean duplicateTransferExists(String requestId) {
         return transferRepository.existsByRequestId(requestId);
+    }
+
+    public List<Transfer> findAll() {
+        return transferRepository.findAll();
     }
 
 }

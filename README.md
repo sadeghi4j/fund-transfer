@@ -1,7 +1,7 @@
 # Fund Transfer
 
 ### Task description: 
-Define and implement a RESTful API that performs finds transfer between two accounts with currency exchange.
+Define and implement a RESTful API that performs funds transfer between two accounts with currency exchange.
 
 ### Requirements:
 * Implementation has to be done in Java
@@ -12,7 +12,7 @@ Define and implement a RESTful API that performs finds transfer between two acco
   * A Currency (String)
   * A balance (numeric)
 * Exchange rates can be retrieved from external APIs
-* Program has to be runnable without anu special software/container
+* Program has to be runnable without any special software/container
 * Functionality covered with tests
 * Fund transfer should fail if:
   * Either the debit or the credit account does not exist
