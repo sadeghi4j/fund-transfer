@@ -52,6 +52,32 @@ public class TransferService {
     }
 
     @Transactional
+    public TransferResponse transferWithLock(String requestId, TransferRequest request, Double exchangeRate) {
+        BigDecimal toAmount = request.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
+
+        Account fromAccount = accountService.findAndLock(request.getFromAccountId());
+        Account toAccount = accountService.findAndLock(request.getToAccountId());
+
+        fromAccount.setBalance(fromAccount.getBalance().subtract(request.getAmount()));
+        toAccount.setBalance(toAccount.getBalance().add(toAmount));
+
+        accountService.save(fromAccount);
+        accountService.save(toAccount);
+
+
+        Transfer transfer = new Transfer(request.getFromAccountId(), request.getAmount(),
+                request.getToAccountId(), toAmount, requestId);
+        transferRepository.save(transfer);
+
+        return TransferResponse.builder()
+                .fromAccountId(request.getFromAccountId())
+                .toAccountId(request.getToAccountId())
+                .fromAmount(request.getAmount())
+                .toAmount(toAmount)
+                .build();
+    }
+
+    @Transactional
     public TransferResponse transfer(String requestId, TransferRequest transferRequest, Double exchangeRate) {
         BigDecimal toAmount = transferRequest.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
 

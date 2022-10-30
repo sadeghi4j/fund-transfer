@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -24,15 +25,11 @@ public class AccountService {
         return accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
     }
 
-    public void save(Account account) {
-        accountRepository.save(account);
+    public Account findAndLock(Long id) {
+        return accountRepository.findAndLock(id);
     }
 
-
-    public void withdrawWithLock(Long id, BigDecimal amount) {
-        Account account = accountRepository.findAndLock(id);
-        BigDecimal subtract = account.getBalance().subtract(amount);
-        account.setBalance(subtract);
+    public void save(Account account) {
         accountRepository.save(account);
     }
 

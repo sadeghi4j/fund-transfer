@@ -27,4 +27,9 @@ public class TransferFacade {
         Double exchangeRate = transferService.validateTransfer(requestId, transferRequest);
         return transferService.transfer(requestId, transferRequest, exchangeRate);
     }
+
+    public TransferResponse transferWithLock(String requestId, TransferRequest transferRequest) {
+        Double exchangeRate = transferService.validateTransfer(requestId, transferRequest);
+        return transferService.transferWithLock(requestId, transferRequest, exchangeRate);
+    }
 }

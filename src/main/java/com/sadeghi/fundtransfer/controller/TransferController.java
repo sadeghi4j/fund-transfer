@@ -21,7 +21,7 @@ public class TransferController {
 
     @PostMapping("/transfer")
     public TransferResponse transfer(@RequestHeader("X-Request-ID") String requestId, @RequestBody TransferRequest transferRequest) {
-        return transferFacade.transfer(requestId, transferRequest);
+        return transferFacade.transferWithLock(requestId, transferRequest);
 //        return DTOMapper.INSTANCE.mapMediaItem(mediaItemService.findAllMediaItemsWithSameWriterAndDirectorWhoIsAlive());
     }
 
