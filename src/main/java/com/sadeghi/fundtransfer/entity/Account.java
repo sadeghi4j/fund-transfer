@@ -3,7 +3,8 @@ package com.sadeghi.fundtransfer.entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Version;
 import java.math.BigDecimal;
 
 /**
@@ -26,7 +27,6 @@ public class Account extends BaseEntity<Long> {
     BigDecimal balance;
 
     @Version
-//    @Column(columnDefinition = "default 1")
     int version;
 
 }

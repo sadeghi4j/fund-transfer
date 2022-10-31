@@ -72,8 +72,6 @@ public class TransferService {
                 .toAmount(toAmount)
                 .requestId(requestId)
                 .build();
-        /*Transfer transfer = new Transfer(request.getFromAccountId(), request.getAmount(),
-                request.getToAccountId(), toAmount, requestId);*/
         transferRepository.save(transfer);
 
         return TransferResponse.builder()
