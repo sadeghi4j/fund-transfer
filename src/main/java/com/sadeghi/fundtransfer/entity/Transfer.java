@@ -5,11 +5,13 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Description of file goes here
+ * Transfer Entity to log all transfers in DB
  *
  * @author Ali Sadeghi
  * Created at 2022/10/28 - 6:35 PM
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-//todo add indexes
+@Table(indexes = {@Index(columnList = "requestId", unique = true)})
 public class Transfer extends BaseEntity<Long> {
 
     Long fromAccountId;

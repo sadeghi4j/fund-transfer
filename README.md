@@ -23,13 +23,14 @@ Define and implement a RESTful API that performs funds transfer between two acco
 * The code is expected to be of good quality and easy to maintain
 * As business specification is very light, use common sense in case of doubt
 
-
-# Solution
-## Tips
-### LockModeType:
-* **PESSIMISTIC_READ**:
-  * no one can write until transaction is done
-  * execute select ... for update
-* **PESSIMISTIC_WRITE**: 
-  * no one can read or write until transaction is done
-  * execute select ... for update
+## Solution:
+### Explanations
+* I split the main process into two parts. The first part (transferService.validateTransfer) is responsible to validation and retrieve exchange rate 
+and second part (transferService.transferWithLock) is responsible for the main transfer process. I used `@Transactiona` for the second part just because 
+a transaction should be done quickly. (validation and external service calls should be executed out of a transaction).  
+* **LockModeType:** There are Two kinds of locking: **Pessimistic** and **Optimistic**. Pessimistic is done by `select ... for update` in database side 
+but Optimistic is done using version attribute and throws exception if concurrent modification is in progress. 
+Since it was necessary to save all the records in this assignment, I chose pessimistic locking. Two types of Pessimistic locking exists that either one can be used
+  * PESSIMISTIC_READ: No one can write until transaction is done
+  * PESSIMISTIC_WRITE: No one can read or write until transaction is done
+* Some test cases implemented, and I tried to use JUnit 5, MockBean and MockMVC for them to show I'm familiar with these libraries.

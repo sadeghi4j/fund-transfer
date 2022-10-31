@@ -2,6 +2,8 @@ package com.sadeghi.fundtransfer.service;
 
 import com.sadeghi.fundtransfer.dto.TransferRequest;
 import com.sadeghi.fundtransfer.dto.TransferResponse;
+import com.sadeghi.fundtransfer.entity.Transfer;
+import com.sadeghi.fundtransfer.mapper.DTOMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,18 +27,13 @@ public class TransferFacade {
 
     public TransferResponse transfer(String requestId, TransferRequest transferRequest) {
         Double exchangeRate = transferService.validateTransfer(requestId, transferRequest);
-        return transferService.transfer(requestId, transferRequest, exchangeRate);
+        Transfer transfer = transferService.transfer(requestId, transferRequest, exchangeRate);
+        return DTOMapper.INSTANCE.mapTransfer(transfer);
     }
 
     public TransferResponse transferWithLock(String requestId, TransferRequest transferRequest) {
         Double exchangeRate = transferService.validateTransfer(requestId, transferRequest);
-        TransferResponse transferResponse = null;
-        try {
-            transferResponse = transferService.transferWithLock(requestId, transferRequest, exchangeRate);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            log.info("transfer list: {}", transferService.findAll());
-        }
-        return transferResponse;
+        Transfer transfer = transferService.transferWithLock(requestId, transferRequest, exchangeRate);
+        return DTOMapper.INSTANCE.mapTransfer(transfer);
     }
 }

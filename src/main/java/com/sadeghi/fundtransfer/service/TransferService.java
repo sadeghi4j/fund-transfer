@@ -47,14 +47,15 @@ public class TransferService {
 
         Double exchangeRate = exchangeRateService.getExchangeRate(fromAccount.getCurrency(), toAccount.getCurrency());
         if (exchangeRate == null || exchangeRate.equals(0D)) {
-            log.error("Exchange Rate Can Not Be Retrieved Exception from: {} to: {}", fromAccount.getCurrency(), toAccount.getCurrency());
+            log.error("Exchange Rate Can Not Be Retrieved Exception from: {} to: {}, requestId: {}",
+                    fromAccount.getCurrency(), toAccount.getCurrency(), requestId);
             throw new ExchangeRateCanNotBeRetrievedException();
         }
         return exchangeRate;
     }
 
     @Transactional
-    public TransferResponse transferWithLock(String requestId, TransferRequest request, Double exchangeRate) {
+    public Transfer transferWithLock(String requestId, TransferRequest request, Double exchangeRate) {
         BigDecimal toAmount = request.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
 
         Account fromAccount = accountService.findAndLock(request.getFromAccountId());
@@ -68,39 +69,25 @@ public class TransferService {
 
         Transfer transfer = Transfer.builder()
                 .fromAccountId(request.getFromAccountId())
-                .fromAmount(request.getAmount())
+                .fromAmount(fromAccount.getBalance())
                 .toAccountId(request.getToAccountId())
-                .toAmount(toAmount)
+                .toAmount(toAccount.getBalance())
                 .requestId(requestId)
                 .build();
-        transferRepository.save(transfer);
-
-        return TransferResponse.builder()
-                .fromAccountId(request.getFromAccountId())
-                .toAccountId(request.getToAccountId())
-                .fromAmount(request.getAmount())
-                .toAmount(toAmount)
-                .build();
+        return transferRepository.save(transfer);
     }
 
     @Transactional
-    public TransferResponse transfer(String requestId, TransferRequest request, Double exchangeRate) {
+    public Transfer transfer(String requestId, TransferRequest request, Double exchangeRate) {
         BigDecimal toAmount = request.getAmount().multiply(BigDecimal.valueOf(exchangeRate));
 
         accountService.withdraw(request.getFromAccountId(), request.getAmount());
         accountService.deposit(request.getToAccountId(), toAmount);
 
-        createAndSaveTransfer(requestId, request, toAmount);
-
-        return TransferResponse.builder()
-                .fromAccountId(request.getFromAccountId())
-                .toAccountId(request.getToAccountId())
-                .fromAmount(request.getAmount())
-                .toAmount(toAmount)
-                .build();
+        return createAndSaveTransfer(requestId, request, toAmount);
     }
 
-    private void createAndSaveTransfer(String requestId, TransferRequest request, BigDecimal toAmount) {
+    private Transfer createAndSaveTransfer(String requestId, TransferRequest request, BigDecimal toAmount) {
         Transfer transfer = Transfer.builder()
                 .fromAccountId(request.getFromAccountId())
                 .fromAmount(request.getAmount())
@@ -108,7 +95,8 @@ public class TransferService {
                 .toAmount(toAmount)
                 .requestId(requestId)
                 .build();
-        transferRepository.save(transfer);
+        transfer = transferRepository.save(transfer);
+        return transfer;
     }
 
     public boolean duplicateTransferExists(String requestId) {

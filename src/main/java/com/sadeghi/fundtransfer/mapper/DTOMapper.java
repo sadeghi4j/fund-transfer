@@ -1,5 +1,7 @@
 package com.sadeghi.fundtransfer.mapper;
 
+import com.sadeghi.fundtransfer.dto.TransferResponse;
+import com.sadeghi.fundtransfer.entity.Transfer;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -8,6 +10,6 @@ public interface DTOMapper {
 
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
-//    List<SampleDto> mapMediaItem(List<MediaItem> source);
+    TransferResponse mapTransfer(Transfer transfer);
 
 }

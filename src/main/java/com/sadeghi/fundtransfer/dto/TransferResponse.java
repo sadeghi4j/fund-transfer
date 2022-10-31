@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * Description of file goes here
@@ -22,8 +23,10 @@ import java.math.BigDecimal;
 public class TransferResponse {
 
     Long fromAccountId;
-    Long toAccountId;
     BigDecimal fromAmount;
+    Long toAccountId;
     BigDecimal toAmount;
+    String requestId;
+    LocalDateTime creationTime;
 
 }
