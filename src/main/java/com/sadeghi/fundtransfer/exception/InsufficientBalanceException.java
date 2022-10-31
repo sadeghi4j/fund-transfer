@@ -6,7 +6,7 @@ package com.sadeghi.fundtransfer.exception;
  * @author Ali Sadeghi
  * Created at 2022/10/28 - 6:32 PM
  */
-public class BalanceNotSufficientException extends RuntimeException {
+public class InsufficientBalanceException extends RuntimeException {
 
     @Override
     public String getMessage() {

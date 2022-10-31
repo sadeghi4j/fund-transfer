@@ -19,17 +19,9 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExchangeRateService {
 
-    Map<String, Double> rates;
-
-    @PostConstruct
-    public void init() {
-        rates = new HashMap<>();
-        rates.put("EUR/USD", 0.9940);
-        rates.put("EUR/GBP", 0.8583);
-        rates.put("EUR/CAD", 1.3547);
-    }
+    final ExchangeRateClientService exchangeRateClientService;
 
     public Double getExchangeRate(String from, String to) {
-        return rates.get(from + "/" + to);
+        return exchangeRateClientService.getExchangeRate(from, to);
     }
 }

@@ -26,7 +26,7 @@ public class Account extends BaseEntity<Long> {
     String currency;
     BigDecimal balance;
 
-    @Version
-    int version;
+//    @Version
+//    int version;
 
 }

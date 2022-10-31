@@ -34,7 +34,8 @@ public class TransferFacade {
         try {
             transferResponse = transferService.transferWithLock(requestId, transferRequest, exchangeRate);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            log.info("transfer list: {}", transferService.findAll());
         }
         return transferResponse;
     }

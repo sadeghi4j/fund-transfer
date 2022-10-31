@@ -4,7 +4,7 @@ import com.sadeghi.fundtransfer.dto.TransferRequest;
 import com.sadeghi.fundtransfer.dto.TransferResponse;
 import com.sadeghi.fundtransfer.entity.Account;
 import com.sadeghi.fundtransfer.entity.Transfer;
-import com.sadeghi.fundtransfer.exception.BalanceNotSufficientException;
+import com.sadeghi.fundtransfer.exception.InsufficientBalanceException;
 import com.sadeghi.fundtransfer.exception.DuplicateRequestException;
 import com.sadeghi.fundtransfer.exception.ExchangeRateCanNotBeRetrievedException;
 import com.sadeghi.fundtransfer.repository.TransferRepository;
@@ -26,7 +26,7 @@ public class TransferService {
 
     final AccountService accountService;
     final TransferRepository transferRepository;
-    final ExchangeRateClientService exchangeRateClientService;
+    final ExchangeRateService exchangeRateService;
 
     // Transactional annotation should not be used here, because here we are doing some validation
     // , and external service call, so it is not needed to grab transaction and waste it
@@ -42,11 +42,12 @@ public class TransferService {
         Account toAccount = accountService.findById(transferRequest.getToAccountId());
 
         if (fromAccount.getBalance().compareTo(transferRequest.getAmount()) < 0) {
-            throw new BalanceNotSufficientException();
+            throw new InsufficientBalanceException();
         }
 
-        Double exchangeRate = exchangeRateClientService.getExchangeRate(fromAccount.getCurrency(), toAccount.getCurrency());
-        if (exchangeRate == null) {
+        Double exchangeRate = exchangeRateService.getExchangeRate(fromAccount.getCurrency(), toAccount.getCurrency());
+        if (exchangeRate == null || exchangeRate.equals(0D)) {
+            log.error("Exchange Rate Can Not Be Retrieved Exception from: {} to: {}", fromAccount.getCurrency(), toAccount.getCurrency());
             throw new ExchangeRateCanNotBeRetrievedException();
         }
         return exchangeRate;

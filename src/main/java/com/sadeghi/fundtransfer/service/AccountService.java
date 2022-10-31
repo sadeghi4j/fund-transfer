@@ -2,16 +2,16 @@ package com.sadeghi.fundtransfer.service;
 
 import com.sadeghi.fundtransfer.entity.Account;
 import com.sadeghi.fundtransfer.exception.AccountNotFoundException;
-import com.sadeghi.fundtransfer.exception.BalanceNotSufficientException;
+import com.sadeghi.fundtransfer.exception.InsufficientBalanceException;
 import com.sadeghi.fundtransfer.repository.AccountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -23,6 +23,10 @@ public class AccountService {
 
     public Account findById(Long id) {
         return accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
+    }
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
     }
 
     public Account findAndLock(Long id) {
@@ -39,7 +43,7 @@ public class AccountService {
         // between transfer method starts until the execution gets here
         // and during this time another request may withdraw from this account
         if (balance.compareTo(amount) < 0) {
-            throw new BalanceNotSufficientException();
+            throw new InsufficientBalanceException();
         } else {
             accountRepository.withdraw(id, amount);
         }

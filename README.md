@@ -22,3 +22,14 @@ Define and implement a RESTful API that performs funds transfer between two acco
 ### Additional information:
 * The code is expected to be of good quality and easy to maintain
 * As business specification is very light, use common sense in case of doubt
+
+
+# Solution
+## Tips
+### LockModeType:
+* **PESSIMISTIC_READ**:
+  * no one can write until transaction is done
+  * execute select ... for update
+* **PESSIMISTIC_WRITE**: 
+  * no one can read or write until transaction is done
+  * execute select ... for update
