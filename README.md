@@ -33,4 +33,5 @@ but Optimistic is done using version attribute and throws exception if concurren
 Since it was necessary to save all the records in this assignment, I chose pessimistic locking. Two types of Pessimistic locking exists that either one can be used
   * PESSIMISTIC_READ: No one can write until transaction is done
   * PESSIMISTIC_WRITE: No one can read or write until transaction is done
-* Some test cases implemented, and I tried to use JUnit 5, MockBean and MockMVC for them to show I'm familiar with these libraries.
+* Some test cases implemented, and I tried to use **JUnit 5**, **Mockito** and **MockMVC** for them to show I'm familiar with these libraries.
+* I added Resilience4j Retry for exchange rate external api call 

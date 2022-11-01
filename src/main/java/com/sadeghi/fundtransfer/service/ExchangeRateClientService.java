@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ExchangeRateClientService", url = "http://localhost:8080")
 public interface ExchangeRateClientService {
 
-    // todo Retry can be used here
     @GetMapping("/exchange-rate/{from}/{to}")
     Double getExchangeRate(@PathVariable String from, @PathVariable String to);
 

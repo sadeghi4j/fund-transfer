@@ -21,12 +21,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
@@ -37,8 +37,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,7 +61,7 @@ class FundTransferApplicationTests extends BaseTestClass {
     @Autowired
     private AccountService accountService;
 
-    @MockBean
+    @Mock
     private ExchangeRateService exchangeRateService;
 
     @Autowired
@@ -90,7 +88,6 @@ class FundTransferApplicationTests extends BaseTestClass {
         checkAccountBalance(2L, new BigDecimal("1000.994"));
         checkTransferListSize(1);
     }
-
 
     @Order(2)
     @Test
