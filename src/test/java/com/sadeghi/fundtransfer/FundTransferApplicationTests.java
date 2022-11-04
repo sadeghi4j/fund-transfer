@@ -132,7 +132,7 @@ class FundTransferApplicationTests extends BaseTestClass {
         IntStream.range(1, 1001).parallel().forEach(cnt -> {
             String requestId = UUID.randomUUID().toString();
             log.info("cnt: {}, requestId: {} ", cnt, requestId);
-            transferFacade.transfer(requestId, new TransferRequest(1L, 2L, new BigDecimal(1)));
+            transferFacade.transferWithLock(requestId, new TransferRequest(1L, 2L, new BigDecimal(1)));
         });
         watch.stop();
         System.out.println("watch.getTotalTimeMillis() = " + watch.getTotalTimeMillis());
