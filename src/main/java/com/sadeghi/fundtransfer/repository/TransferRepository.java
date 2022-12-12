@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
     boolean existsByRequestId(String requestIid);
+
+    int countAllBy();
+
 }

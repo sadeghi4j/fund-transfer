@@ -28,7 +28,7 @@ public class Account extends BaseEntity<Long> {
     @Column(precision = 19, scale = 4)
     BigDecimal balance;
 
-//    @Version
-//    int version;
+    @Version
+    int version;
 
 }

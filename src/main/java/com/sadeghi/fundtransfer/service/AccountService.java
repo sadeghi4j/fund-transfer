@@ -33,6 +33,16 @@ public class AccountService {
         return accountRepository.findAndLock(id);
     }
 
+    public Account findAndLockOptimistic(Long id) {
+        return accountRepository.findAndLockOptimistic(id);
+    }
+
+    public void checkBalance(Account account, BigDecimal amount) {
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientBalanceException();
+        }
+    }
+
     public void save(Account account) {
         accountRepository.save(account);
     }
